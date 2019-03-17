@@ -19,4 +19,12 @@ object Additives {
   }
 
   def sum[A](lst: List[A])(implicit m: Additive[A]): A = lst.foldLeft(m.zero)((x, y) => m.plus(x, y))
+
+  case class Point(x: Double, y: Double)
+  object Point {
+    implicit object PointAdditive extends Additive[Point] {
+      def plus(a: Point, b: Point): Point = Point(a.x + b.x, a.y + b.y)
+      def zero: Point = Point(0.0, 0.0)
+    }
+  }
 }
