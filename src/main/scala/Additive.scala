@@ -1,4 +1,4 @@
-object Additives {
+object Additive {
 
   trait Additive[A] {
     def plus(a: A, b: A): A
@@ -16,6 +16,37 @@ object Additives {
     def plus(a: Int, b: Int): Int = a + b
 
     def zero: Int = 0
+  }
+
+  case class Point(x: Int, y: Int)
+  object Point {
+
+    implicit object PointAdditive extends Additive[Point] {
+      def plus(a: Point, b: Point): Point = Point(a.x + b.x, a.y + b.y)
+
+      def zero: Point = Point(0, 0)
+    }
+
+  }
+
+  case class Rational(num: Int, den: Int)
+
+  object Rational {
+
+    implicit object RationalAddtive extends Additive[Rational] {
+      def plus(a: Rational, b: Rational): Rational = {
+        if (a == zero) {
+          b
+        } else if (b == zero) {
+          a
+        } else {
+          Rational(a.num * b.den + b.num * a.den, a.den * b.den)
+        }
+      }
+
+      def zero: Rational = Rational(0, 0)
+    }
+
   }
 
   def sum[A](lst: List[A])(implicit m: Additive[A]): A = lst.foldLeft(m.zero)((x, y) => m.plus(x, y))
